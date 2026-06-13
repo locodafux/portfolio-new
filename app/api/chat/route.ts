@@ -1,6 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
-import { profileKnowledge } from "@/lib/data";
+import { getPortfolioFallbackAnswer, getQuickPromptAnswer, profileKnowledge } from "@/lib/data";
 
 export const runtime = "nodejs";
 
@@ -70,15 +70,21 @@ function normalizeMessages(value: unknown): IncomingMessage[] {
 
 function buildSystemInstruction() {
   return [
-    "You are Leonardo's portfolio AI assistant.",
+    "You are Leonardo's portfolio assistant.",
     "Your job is to answer visitors' questions about Leonardo Timkang Jr. using only the provided profile knowledge.",
-    "Be friendly, professional, short, helpful, and portfolio-focused.",
+    "Be friendly, professional, concise, helpful, and portfolio-focused.",
     "Do not pretend to be Leonardo or a live human.",
     "Never invent facts, companies, awards, dates, contact details, or projects.",
     "If information is missing, reply exactly: I don't have that detail in Leonardo's portfolio data yet, but you can contact him directly for more information.",
     "If the question is inappropriate, private, or sensitive, politely refuse and redirect to professional portfolio topics.",
     "If the user asks a general coding question, answer briefly and connect it to Leonardo's skills when natural.",
     "Keep answers focused on Leonardo's skills, experience, projects, education, availability, tech stack, and contact details.",
+    "Interpret common visitor questions in a portfolio-friendly way:",
+    '- "Tell me about Leonardo" means summarize his professional background.',
+    '- "What are his main skills?" means highlight his core technical stack and strengths.',
+    '- "What projects has he built?" means summarize notable portfolio and business systems work.',
+    '- "How can I contact him?" means provide the contact details available in the profile data.',
+    "If the answer exists in the profile knowledge, answer directly instead of saying you do not know.",
     "",
     "Profile knowledge:",
     JSON.stringify(profileKnowledge, null, 2),
@@ -86,10 +92,6 @@ function buildSystemInstruction() {
 }
 
 export async function POST(request: NextRequest) {
-  if (!process.env.GEMINI_API_KEY) {
-    return NextResponse.json({ error: "Missing Gemini API key." }, { status: 500 });
-  }
-
   const ip = getClientIp(request);
 
   if (isRateLimited(ip)) {
@@ -116,19 +118,49 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "A user message is required." }, { status: 400 });
   }
 
+  const fallbackReply = getPortfolioFallbackAnswer(latestUserMessage.content);
+
+  if (!process.env.GEMINI_API_KEY) {
+    if (fallbackReply) {
+      return NextResponse.json({ reply: fallbackReply, source: "fallback" });
+    }
+
+    return NextResponse.json({ error: "Missing Gemini API key." }, { status: 500 });
+  }
+
   try {
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    const quickPromptContext = getQuickPromptAnswer(latestUserMessage.content);
     const response = await ai.models.generateContent({
       model: MODEL_NAME,
-      contents: messages.map((message) => ({
-        role: message.role === "assistant" ? "model" : "user",
-        parts: [{ text: message.content }],
-      })),
+      contents: [
+        ...(quickPromptContext
+          ? [
+              {
+                role: "user" as const,
+                parts: [
+                  {
+                    text: [
+                      "Quick prompt context:",
+                      quickPromptContext,
+                      "",
+                      "Use the profile knowledge and the context above to answer the visitor clearly.",
+                    ].join("\n"),
+                  },
+                ],
+              },
+            ]
+          : []),
+        ...messages.map((message) => ({
+          role: message.role === "assistant" ? "model" : "user",
+          parts: [{ text: message.content }],
+        })),
+      ],
       config: {
         systemInstruction: buildSystemInstruction(),
         temperature: 0.4,
         topP: 0.9,
-        maxOutputTokens: 220,
+        maxOutputTokens: 260,
         responseMimeType: "text/plain",
       },
     });
@@ -136,11 +168,19 @@ export async function POST(request: NextRequest) {
     const reply = response.text?.trim();
 
     if (!reply) {
+      if (fallbackReply) {
+        return NextResponse.json({ reply: fallbackReply, source: "fallback" });
+      }
+
       return NextResponse.json({ error: "Empty AI response." }, { status: 502 });
     }
 
     return NextResponse.json({ reply });
   } catch {
+    if (fallbackReply) {
+      return NextResponse.json({ reply: fallbackReply, source: "fallback" });
+    }
+
     return NextResponse.json({ error: "Failed to generate a response." }, { status: 500 });
   }
 }

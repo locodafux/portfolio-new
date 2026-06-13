@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ChatButton } from "@/components/chat/ChatButton";
 import { ChatWindow } from "@/components/chat/ChatWindow";
+import { getPortfolioFallbackAnswer } from "@/lib/data";
 
 type StoredMessage = {
   id: string;
@@ -115,17 +116,29 @@ export function PortfolioChat() {
         }),
       });
 
-      const data = (await response.json()) as { reply?: string; error?: string };
+      const data = (await response.json()) as { answer?: string; reply?: string; message?: string; error?: string };
+      const fallbackAnswer = getPortfolioFallbackAnswer(nextInput);
+      const answer =
+        data.answer?.trim() ||
+        data.reply?.trim() ||
+        data.message?.trim() ||
+        data.error?.trim() ||
+        fallbackAnswer ||
+        "Sorry, I couldn’t generate an answer. Please try again.";
 
-      if (!response.ok || !data.reply) {
+      if (!response.ok && !data.reply?.trim() && !fallbackAnswer) {
         throw new Error(data.error || "Request failed");
       }
 
-      setMessages((currentMessages) => [...currentMessages, createMessage("assistant", data.reply as string)]);
+      setMessages((currentMessages) => [...currentMessages, createMessage("assistant", answer)]);
     } catch {
+      const fallbackAnswer = getPortfolioFallbackAnswer(nextInput);
       setMessages((currentMessages) => [
         ...currentMessages,
-        createMessage("error", "Sorry, I couldn’t respond right now. Please try again."),
+        createMessage(
+          fallbackAnswer ? "assistant" : "error",
+          fallbackAnswer || "Sorry, I couldn’t respond right now. Please try again.",
+        ),
       ]);
     } finally {
       setIsLoading(false);
