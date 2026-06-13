@@ -19,7 +19,7 @@ export const experienceItems = [
   {
     title: "System Developer",
     company: "Wilcon Depot Inc.",
-    meta: "Quezon City, Metro Manila • July 2024 – Present",
+    meta: "Quezon City, Metro Manila • July 2024 – May 2026",
     description: [
       "Designed and developed systems in Omnibus based on gathered user and business requirements.",
       "Integrated enterprise data with Infor using the M3 API to support system interoperability.",
@@ -173,19 +173,4 @@ export const highlights = [
     title: "User-Centered Development",
     text: "Creates practical interfaces for users handling approvals, reports, order tracking, and operational tasks.",
   },
-] as const;
-
-export const galleryItems = [
-  "ERP Integration",
-  "Approval Workflow",
-  "Payment Monitoring",
-  "Customer Orders",
-  "Price Lookup",
-  "Branch Operations",
-  "Supplier Invoices",
-  "Cash Replenishment",
-  "Report Generation",
-  "Dashboard UI",
-  "Database Workflow",
-  "Production Deployment",
 ] as const;

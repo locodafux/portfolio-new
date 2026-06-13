@@ -2,7 +2,6 @@ import Link from "next/link";
 import {
   achievements,
   experienceItems,
-  galleryItems,
   highlights,
   projects,
   techCategories,
@@ -303,29 +302,15 @@ export default function HomePage() {
             eyebrow="Selected Work"
             title="Recent Projects"
             description="Recent internal products and workflow systems designed for financial operations, branch activity, and order visibility."
-            action={
-              <Link
-                href="#gallery"
-                className="theme-text-muted inline-flex items-center gap-2 text-sm font-medium transition hover:text-[var(--foreground)]"
-              >
-                View All
-                <ArrowUpRightIcon className="h-4 w-4" />
-              </Link>
-            }
           />
           <div className="mt-8 grid grid-cols-1 gap-5 lg:grid-cols-2">
             {projects.map((project, index) => (
               <Reveal key={project.title} delay={getStaggerDelay(index)}>
                 <Surface className="group p-6 transition duration-200 hover:-translate-y-1 hover:border-[var(--line-strong)] hover:shadow-lg sm:p-7">
                   <div className="flex h-full flex-col gap-6">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="space-y-2">
-                        <p className="theme-text-soft text-xs font-semibold uppercase tracking-[0.24em]">{project.date}</p>
-                        <h3 className="theme-text text-xl font-semibold tracking-tight">{project.title}</h3>
-                      </div>
-                      <span className="theme-accent-muted theme-text-muted rounded-full p-2 transition group-hover:bg-[var(--accent)] group-hover:text-[var(--accent-contrast)]">
-                        <ArrowUpRightIcon className="h-4 w-4" />
-                      </span>
+                    <div className="space-y-2">
+                      <p className="theme-text-soft text-xs font-semibold uppercase tracking-[0.24em]">{project.date}</p>
+                      <h3 className="theme-text text-xl font-semibold tracking-tight">{project.title}</h3>
                     </div>
                     <p className="theme-text-muted text-sm leading-7">{project.description}</p>
                     <ul className="theme-text-muted space-y-2 text-sm leading-7">
@@ -447,72 +432,6 @@ export default function HomePage() {
                 </div>
               </Surface>
             </Reveal>
-          </div>
-        </Reveal>
-
-        <Reveal as="section" id="gallery" className="py-12 md:py-16 lg:py-24">
-          <SectionHeading
-            eyebrow="Snapshots"
-            title="Gallery"
-            description="Abstract, interface-inspired mock panels representing the systems, workflows, and dashboards behind Leonardo’s projects."
-          />
-          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            {galleryItems.map((item, index) => (
-              <Reveal key={item} delay={getStaggerDelay(index, 70)} distance={18}>
-                <Surface className="group overflow-hidden p-4 transition duration-300 hover:-translate-y-1 hover:shadow-lg">
-                  <div className="theme-gallery-panel theme-border aspect-[4/3] rounded-[22px] border p-4 transition duration-300 group-hover:scale-[1.02]">
-                    <div className="flex h-full flex-col">
-                      <div className="mb-4 flex items-center justify-between">
-                        <div className="space-y-1">
-                          <div className="h-2 w-14 rounded-full bg-[var(--line-strong)]" />
-                          <div className="h-2 w-24 rounded-full bg-[var(--line)]" />
-                        </div>
-                        <div className="flex gap-1.5">
-                          <span className="h-2.5 w-2.5 rounded-full bg-[var(--line-strong)]" />
-                          <span className="h-2.5 w-2.5 rounded-full bg-[var(--line)]" />
-                        </div>
-                      </div>
-                      <div className="grid flex-1 grid-cols-[1.2fr_0.8fr] gap-3">
-                        <div className="theme-panel-solid theme-border space-y-3 rounded-2xl border p-3">
-                          <div className="theme-gallery-hero h-20 rounded-xl opacity-90" />
-                          <div className="space-y-2">
-                            <div className="h-2 w-full rounded-full bg-[var(--line)]" />
-                            <div className="h-2 w-4/5 rounded-full bg-[var(--line)]" />
-                            <div className="h-2 w-3/5 rounded-full bg-[var(--accent-muted)]" />
-                          </div>
-                        </div>
-                        <div className="space-y-3">
-                          <div className="theme-panel-solid theme-border rounded-2xl border p-3">
-                            <div className="flex h-20 items-end gap-2">
-                              {[32, 52, 68, 45].map((height, barIndex) => (
-                                <span
-                                  key={`${item}-${barIndex}`}
-                                  className="w-full rounded-t-md bg-[color:color-mix(in_srgb,var(--accent)_80%,transparent)]"
-                                  style={{ height }}
-                                />
-                              ))}
-                            </div>
-                          </div>
-                          <div className="theme-panel-solid theme-border rounded-2xl border p-3">
-                            <div className="space-y-2">
-                              {Array.from({ length: 3 }).map((_, rowIndex) => (
-                                <div key={`${item}-${rowIndex}-row`} className="flex gap-2">
-                                  <span className="h-8 w-8 rounded-lg bg-[var(--line)]" />
-                                  <span
-                                    className={`h-8 rounded-lg ${rowIndex === index % 3 ? "w-20 bg-[color:color-mix(in_srgb,var(--accent)_80%,transparent)]" : "w-16 bg-[var(--line)]"}`}
-                                  />
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <p className="theme-text-muted mt-4 text-sm font-medium">{item}</p>
-                    </div>
-                  </div>
-                </Surface>
-              </Reveal>
-            ))}
           </div>
         </Reveal>
 
