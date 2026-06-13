@@ -61,14 +61,14 @@ export function ChatWindow({
     <section
       id="portfolio-chat-window"
       aria-label={`${profileKnowledge.assistantName} chat`}
-      className={`fixed bottom-3 left-3 right-3 z-50 flex max-h-[calc(100vh-24px)] origin-bottom-right flex-col rounded-[28px] border border-white/10 bg-[color:color-mix(in_srgb,var(--background-secondary)_88%,rgba(10,12,18,0.92))] shadow-[0_30px_80px_rgba(2,6,23,0.4)] backdrop-blur-xl transition duration-300 sm:bottom-6 sm:left-auto sm:right-6 sm:w-[380px] ${
+      className={`theme-panel fixed bottom-3 left-3 right-3 z-50 flex max-h-[calc(100vh-24px)] origin-bottom-right flex-col rounded-[28px] border backdrop-blur-xl transition duration-300 sm:bottom-6 sm:left-auto sm:right-6 sm:w-[380px] ${
         isOpen ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-8 opacity-0"
       }`}
     >
-      <div className="flex items-start justify-between gap-4 border-b border-white/10 px-5 py-4">
+      <div className="flex items-start justify-between gap-4 border-b theme-border px-5 py-4">
         <div className="min-w-0">
-          <p className="text-sm font-semibold text-[var(--foreground)]">{profileKnowledge.assistantName}</p>
-          <p className="mt-1 text-sm text-[var(--muted)]">
+          <p className="theme-text text-sm font-semibold">{profileKnowledge.assistantName}</p>
+          <p className="theme-text-muted mt-1 text-sm">
             Ask about Leonardo&apos;s skills, projects, experience, or tech stack.
           </p>
         </div>
@@ -76,15 +76,15 @@ export function ChatWindow({
           <button
             type="button"
             onClick={onClear}
-            className="rounded-full border border-white/10 px-3 py-2 text-xs font-medium text-[var(--muted)] transition hover:bg-white/5 hover:text-[var(--foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background-secondary)]"
+            className="theme-text-muted theme-accent-muted-hover rounded-full border px-3 py-2 text-xs font-medium theme-border transition hover:text-[var(--foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]"
           >
             Clear
           </button>
           <button
             type="button"
-            aria-label="Close Leonardo AI chat"
+            aria-label="Close Leonardo portfolio chat"
             onClick={onClose}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-[var(--muted)] transition hover:bg-white/5 hover:text-[var(--foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background-secondary)]"
+            className="theme-text-muted theme-accent-muted-hover flex h-10 w-10 items-center justify-center rounded-full border theme-border transition hover:text-[var(--foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]"
           >
             <span aria-hidden="true" className="text-lg leading-none">
               ×
@@ -93,19 +93,27 @@ export function ChatWindow({
         </div>
       </div>
 
-      <div className="flex-1 space-y-4 overflow-y-auto px-4 py-4 sm:px-5">
+      <div className="chat-scrollbar flex-1 space-y-4 overflow-y-auto px-4 py-4 sm:px-5">
         {messages.length === 1 ? (
-          <div className="flex flex-wrap gap-2">
-            {starterPrompts.map((prompt) => (
-              <button
-                key={prompt}
-                type="button"
-                onClick={() => onStarterClick(prompt)}
-                className="rounded-full border border-white/10 bg-white/5 px-3 py-2 text-left text-xs font-medium text-[var(--foreground)] transition hover:border-white/20 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background-secondary)]"
-              >
-                {prompt}
-              </button>
-            ))}
+          <div className="theme-panel-muted rounded-[24px] border p-4 sm:p-5">
+            <div className="space-y-3">
+              <div className="space-y-1">
+                <p className="theme-text text-sm font-semibold">Start with a quick prompt</p>
+                <p className="theme-text-soft text-sm">Use one of these to explore Leonardo&apos;s background.</p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {starterPrompts.map((prompt) => (
+                  <button
+                    key={prompt}
+                    type="button"
+                    onClick={() => onStarterClick(prompt)}
+                    className="theme-panel-solid theme-text rounded-full border px-3 py-2 text-left text-xs font-medium transition hover:-translate-y-0.5 hover:bg-[var(--surface-muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]"
+                  >
+                    {prompt}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         ) : null}
 
@@ -116,11 +124,11 @@ export function ChatWindow({
         {isLoading ? <TypingIndicator /> : null}
       </div>
 
-      <form onSubmit={handleSubmit} className="border-t border-white/10 px-4 py-4 sm:px-5">
+      <form onSubmit={handleSubmit} className="border-t theme-border px-4 py-4 sm:px-5">
         <label htmlFor="portfolio-chat-input" className="sr-only">
-          Ask Leonardo AI a question
+          Ask Leonardo a question
         </label>
-        <div className="rounded-[24px] border border-white/10 bg-black/10 p-2 shadow-inner">
+        <div className="theme-panel-muted rounded-[24px] border p-2 shadow-inner">
           <textarea
             id="portfolio-chat-input"
             ref={textareaRef}
@@ -130,15 +138,15 @@ export function ChatWindow({
             rows={3}
             maxLength={1200}
             placeholder="Ask about Leonardo's work, stack, or experience..."
-            aria-label="Ask Leonardo AI a question"
-            className="min-h-[96px] w-full resize-none bg-transparent px-3 py-2 text-sm leading-7 text-[var(--foreground)] outline-none placeholder:text-[var(--muted-soft)]"
+            aria-label="Ask Leonardo a question"
+            className="theme-text min-h-[96px] w-full resize-none bg-transparent px-3 py-2 text-sm leading-7 outline-none placeholder:text-[var(--muted-soft)]"
           />
           <div className="flex items-center justify-between gap-3 px-2 pb-2 pt-1">
-            <p className="text-xs text-[var(--muted-soft)]">{inputValue.length}/1200</p>
+            <p className="theme-text-soft text-xs">{inputValue.length}/1200</p>
             <button
               type="submit"
               disabled={!canSend}
-              className="inline-flex min-h-11 items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-neutral-950 transition hover:-translate-y-0.5 hover:bg-neutral-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background-secondary)] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
+              className="theme-accent-bg inline-flex min-h-11 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
             >
               {isLoading ? "Sending..." : "Send"}
             </button>

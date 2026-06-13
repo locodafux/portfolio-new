@@ -1,6 +1,6 @@
 export const profileKnowledge = {
   name: "Leonardo Timkang Jr.",
-  assistantName: "Leonardo AI",
+  assistantName: "Leonardo Portfolio Assistant",
   currentRole: "Full Stack Developer",
   currentCompany: "CF Outsourcing Philippines Inc.",
   currentStartDate: "May 4, 2026",

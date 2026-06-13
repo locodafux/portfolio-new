@@ -16,7 +16,7 @@ const MAX_HISTORY_ITEMS = 20;
 const welcomeMessage: StoredMessage = {
   id: "welcome",
   role: "assistant",
-  content: "Hi! I’m Leonardo’s AI assistant. Ask me about his skills, projects, experience, or tech stack.",
+  content: "Hi! I’m Leonardo’s portfolio assistant. Ask me about his skills, projects, experience, or tech stack.",
 };
 
 function createMessage(role: StoredMessage["role"], content: string): StoredMessage {
