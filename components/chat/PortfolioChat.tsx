@@ -34,6 +34,7 @@ export function PortfolioChat() {
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<StoredMessage[]>([welcomeMessage]);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     try {
@@ -73,6 +74,21 @@ export function PortfolioChat() {
     const frame = window.requestAnimationFrame(() => textareaRef.current?.focus());
     return () => window.cancelAnimationFrame(frame);
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    const frame = window.requestAnimationFrame(() => {
+      messagesEndRef.current?.scrollIntoView({
+        block: "end",
+        behavior: isLoading ? "smooth" : "auto",
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [isLoading, isOpen, messages]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -160,6 +176,7 @@ export function PortfolioChat() {
           inputValue={inputValue}
           isLoading={isLoading}
           messages={messages}
+          messagesEndRef={messagesEndRef}
           textareaRef={textareaRef}
           onInputChange={setInputValue}
           onClose={() => setIsOpen(false)}

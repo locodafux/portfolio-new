@@ -125,9 +125,39 @@ export const quickPromptAnswers = {
 } as const;
 
 type QuickPromptKey = keyof typeof quickPromptAnswers;
+type CasualPromptAnswer = {
+  answer: string;
+};
 
 function normalizePrompt(value: string) {
   return value.toLowerCase().replace(/[^\w\s]/g, "").replace(/\s+/g, " ").trim();
+}
+
+function isPrivateQuestion(normalized: string) {
+  const privateTerms = [
+    "girlfriend",
+    "boyfriend",
+    "wife",
+    "husband",
+    "partner",
+    "dating",
+    "date",
+    "crush",
+    "love life",
+    "relationship",
+    "ex",
+    "family",
+    "mother",
+    "father",
+    "sister",
+    "brother",
+    "religion",
+    "politics",
+    "salary",
+    "address",
+  ];
+
+  return privateTerms.some((term) => normalized.includes(term));
 }
 
 const quickPromptAliases: Record<string, QuickPromptKey> = {
@@ -142,11 +172,59 @@ const quickPromptAliases: Record<string, QuickPromptKey> = {
   "where can i reach leonardo": "How can I contact him?",
 };
 
+const casualPromptAnswers: Record<string, CasualPromptAnswer> = {
+  "is leonardo funny": {
+    answer:
+      "That’s not listed in Leonardo’s portfolio, but if clean systems and solid builds count as humor, he might be dangerously funny.",
+  },
+  "is he funny": {
+    answer:
+      "That’s not listed in Leonardo’s portfolio, but if clean systems and solid builds count as humor, he might be dangerously funny.",
+  },
+  "is leonardo cool": {
+    answer:
+      "The portfolio does not rate coolness directly, but building practical systems and polished interfaces is not exactly a bad audition.",
+  },
+  "is he cool": {
+    answer:
+      "The portfolio does not rate coolness directly, but building practical systems and polished interfaces is not exactly a bad audition.",
+  },
+  "can i hire him": {
+    answer:
+      "Absolutely. If you need polished, functional web experiences and business-ready systems, Leonardo looks like a very reasonable person to hire and a very inconvenient person to ignore.",
+  },
+  "is he good": {
+    answer:
+      "Based on the portfolio, yes. Leonardo focuses on full-stack development, clean interfaces, and practical systems that solve real business problems.",
+  },
+  "is leonardo good": {
+    answer:
+      "Based on the portfolio, yes. Leonardo focuses on full-stack development, clean interfaces, and practical systems that solve real business problems.",
+  },
+  "is he good at coding": {
+    answer:
+      "Based on the portfolio, yes. Leonardo works across frontend, backend, databases, and enterprise integrations, with a strong focus on practical delivery.",
+  },
+  "tell me something cool about him": {
+    answer:
+      "One cool thing is that Leonardo’s portfolio does more than list projects. It lets visitors ask about his work through an AI chat experience built into the site.",
+  },
+  "be funny": {
+    answer:
+      "Understood. I’ll keep it professional, but with better timing. Think polished portfolio assistant, not a comedian who accidentally learned TypeScript.",
+  },
+};
+
 export function getQuickPromptAnswer(question: string) {
   const normalized = normalizePrompt(question);
   const match = quickPromptAliases[normalized];
 
   return match ? quickPromptAnswers[match] : null;
+}
+
+export function getCasualPromptAnswer(question: string) {
+  const normalized = normalizePrompt(question);
+  return casualPromptAnswers[normalized]?.answer ?? null;
 }
 
 export function getPortfolioFallbackAnswer(question: string) {
@@ -157,6 +235,30 @@ export function getPortfolioFallbackAnswer(question: string) {
   }
 
   const normalized = normalizePrompt(question);
+
+  if (isPrivateQuestion(normalized)) {
+    return "That’s outside the scope of Leonardo’s portfolio, so I keep it focused on his work. I can help with his skills, projects, experience, or how to contact him.";
+  }
+
+  if (normalized.includes("funny") || normalized.includes("cool")) {
+    return "That detail is not listed in the portfolio, but Leonardo’s work does show a strong eye for clean systems and polished execution, which is at least adjacent to charm.";
+  }
+
+  if (
+    normalized.includes("hire") ||
+    normalized.includes("available") ||
+    normalized.includes("open to work")
+  ) {
+    return "Yes. Leonardo is available for full-stack development, internal business systems, ERP-connected tools, and backend or frontend improvements.";
+  }
+
+  if (
+    normalized.includes("good") ||
+    normalized.includes("great") ||
+    normalized.includes("strong")
+  ) {
+    return "Based on the portfolio, Leonardo is a strong full-stack developer with experience building practical systems, internal tools, and enterprise-connected applications.";
+  }
 
   if (
     normalized.includes("contact") ||
@@ -186,6 +288,16 @@ export function getPortfolioFallbackAnswer(question: string) {
     normalized.includes("portfolio")
   ) {
     return "Leonardo mainly builds practical business systems, internal tools, dashboards, approval workflows, and ERP-connected applications. His portfolio includes Petty Cash Replenishment, Project CO Dashboard, Payment Monitoring, Product Attribute: Price Lookup, APEX Non-Trade PO With Terms, APYRO Attendance Management System, and his portfolio website.";
+  }
+
+  if (
+    normalized.includes("favorite") ||
+    normalized.includes("food") ||
+    normalized.includes("movie") ||
+    normalized.includes("music") ||
+    normalized.includes("hobby")
+  ) {
+    return "That detail is not listed in the portfolio. I can tell you about Leonardo’s skills, projects, and experience instead, which is probably more useful unless this interview includes snacks.";
   }
 
   if (

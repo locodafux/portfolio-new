@@ -16,6 +16,7 @@ type ChatWindowProps = {
   inputValue: string;
   isLoading: boolean;
   messages: Message[];
+  messagesEndRef: RefObject<HTMLDivElement | null>;
   textareaRef: RefObject<HTMLTextAreaElement | null>;
   onInputChange: (value: string) => void;
   onClose: () => void;
@@ -36,6 +37,7 @@ export function ChatWindow({
   inputValue,
   isLoading,
   messages,
+  messagesEndRef,
   textareaRef,
   onInputChange,
   onClose,
@@ -93,7 +95,7 @@ export function ChatWindow({
         </div>
       </div>
 
-      <div className="chat-scrollbar flex-1 space-y-4 overflow-y-auto px-4 py-4 sm:px-5">
+      <div className="chat-scrollbar min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-4 sm:px-5">
         {messages.length === 1 ? (
           <div className="theme-panel-muted rounded-[24px] border p-4 sm:p-5">
             <div className="space-y-3">
@@ -122,6 +124,7 @@ export function ChatWindow({
         ))}
 
         {isLoading ? <TypingIndicator /> : null}
+        <div ref={messagesEndRef} aria-hidden="true" />
       </div>
 
       <form onSubmit={handleSubmit} className="border-t theme-border px-4 py-4 sm:px-5">
