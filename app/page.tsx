@@ -8,9 +8,9 @@ import {
   techCategories,
 } from "@/lib/site-data";
 import { SiteHeader } from "@/components/layout/site-header";
+import { PortfolioChat } from "@/components/chat/PortfolioChat";
 import {
   ArrowUpRightIcon,
-  ChatIcon,
   GitHubIcon,
   LinkedInIcon,
   MailIcon,
@@ -595,16 +595,7 @@ export default function HomePage() {
         </div>
       </footer>
 
-      <div className="fixed bottom-4 right-4 z-50 sm:bottom-6 sm:right-6">
-        <Button
-          href="mailto:leonardotimkangjr@gmail.com?subject=Portfolio%20Inquiry"
-          variant="primary"
-          ariaLabel="Chat with Leonardo via email"
-        >
-          <ChatIcon className="h-4 w-4" />
-          Chat with Leonardo
-        </Button>
-      </div>
+      <PortfolioChat />
     </main>
   );
 }
