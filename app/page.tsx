@@ -153,7 +153,7 @@ export default function HomePage() {
                 <LinkedInIcon className="h-4 w-4" />
                 LinkedIn
               </Button>
-              <Button href="/resume.pdf" ariaLabel="Download Leonardo's resume">
+              <Button href="/resume.pdf" download ariaLabel="Download Leonardo's resume as a PDF">
                 <ArrowUpRightIcon className="h-4 w-4" />
                 Download Resume
               </Button>
@@ -534,7 +534,15 @@ export default function HomePage() {
                       leonardotimkangjr@gmail.com
                     </Link>
                   </p>
-                  <p>Phone: 09606152206</p>
+                  <p>
+                    Phone:{" "}
+                    <Link
+                      href="tel:+639606152206"
+                      className="theme-text font-medium underline decoration-[var(--line-strong)] underline-offset-4"
+                    >
+                      09606152206
+                    </Link>
+                  </p>
                 </div>
               </div>
               <div className="flex flex-wrap gap-3">

@@ -7,6 +7,7 @@ type ButtonProps = {
   variant?: "primary" | "secondary" | "ghost";
   external?: boolean;
   ariaLabel?: string;
+  download?: boolean | string;
 };
 
 const variants = {
@@ -24,6 +25,7 @@ export function Button({
   variant = "secondary",
   external,
   ariaLabel,
+  download,
 }: ButtonProps) {
   const props: AnchorHTMLAttributes<HTMLAnchorElement> = external
     ? { target: "_blank", rel: "noreferrer" }
@@ -33,6 +35,7 @@ export function Button({
     <Link
       href={href}
       aria-label={ariaLabel}
+      download={download}
       {...props}
       className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${variants[variant]}`}
     >

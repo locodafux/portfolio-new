@@ -60,7 +60,8 @@ export function SiteHeader() {
     <>
       <ScrollProgress />
       <header className="sticky top-0 z-40 border-b border-transparent bg-[color:color-mix(in_srgb,var(--background)_78%,transparent)] backdrop-blur">
-        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex w-full max-w-7xl flex-col gap-3 px-4 py-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between gap-4">
           <Link href="#" className="theme-text text-sm font-semibold uppercase tracking-[0.2em]">
             LT
           </Link>
@@ -93,6 +94,28 @@ export function SiteHeader() {
               <span className="sm:hidden">Email</span>
             </Button>
           </div>
+        </div>
+          <nav aria-label="Primary mobile" className="flex gap-2 overflow-x-auto pb-1 md:hidden">
+            {navItems.map((item) => {
+              const isActive = activeSection === item.href.replace("#", "");
+
+              return (
+                <Link
+                  key={`mobile-${item.href}`}
+                  href={item.href}
+                  aria-current={isActive ? "page" : undefined}
+                  onClick={(event) => handleNavClick(event, item.href)}
+                  className={`inline-flex min-h-11 shrink-0 items-center rounded-full px-4 text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] focus-visible:ring-offset-4 focus-visible:ring-offset-[var(--background)] ${
+                    isActive
+                      ? "theme-accent-bg shadow-sm"
+                      : "theme-text-muted bg-[var(--surface)] hover:bg-[var(--surface-muted)] hover:text-[var(--foreground)]"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
         </div>
       </header>
     </>
